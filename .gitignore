@@ -3,4 +3,3 @@ Raw/
 .claude/
 .playwright-mcp/
 *.png
-!static/images/*.png
