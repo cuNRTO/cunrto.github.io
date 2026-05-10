@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cuNRTO: GPU-Accelerated Nonlinear Robust Trajectory Optimization</title>
+  <meta name="description" content="cuNRTO: GPU-Accelerated Nonlinear Robust Trajectory Optimization — RSS 2026">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+
+  <!-- ── Hero ──────────────────────────────────── -->
+  <header class="hero">
+    <h1 class="paper-title">cuNRTO: GPU-Accelerated Nonlinear<br>Robust Trajectory Optimization</h1>
+    <div><span class="venue-badge">Robotics: Science and Systems 2026</span></div>
+
+    <div class="authors">
+      <a href="https://joelwang.me" target="_blank">Jiawei Wang</a><sup>*2,3</sup>,&ensp;
+      <a href="#">Arshiya Taj Abdul</a><sup>*1</sup>,&ensp;
+      <a href="https://scholar.google.com/citations?user=8baFHjYAAAAJ" target="_blank">Evangelos A. Theodorou</a><sup>1</sup>
+    </div>
+    <div class="affiliations">
+      <sup>1</sup>Georgia Institute of Technology&ensp;&ensp;
+      <sup>2</sup>Contextual Robotics Institute, UC San Diego&ensp;&ensp;
+      <sup>3</sup>Deemos Corporation
+      <span class="equal-note">* Equal contribution</span>
+    </div>
+
+    <div class="link-row">
+      <a class="link-btn" href="https://arxiv.org/pdf/2603.02642" target="_blank"><i class="fas fa-file-pdf"></i> Paper</a>
+      <a class="link-btn" href="https://arxiv.org/abs/2603.02642" target="_blank"><i class="ai ai-arxiv"></i> arXiv</a>
+      <a class="link-btn" href="https://youtu.be/AqxSrkhoRZE" target="_blank"><i class="fab fa-youtube"></i> Video</a>
+      <a class="link-btn" href="#"><i class="fab fa-github"></i> Code</a>
+    </div>
+  </header>
+
+  <hr class="divider">
+
+  <!-- ── Teaser: Image + Stats ─────────────────── -->
+  <section class="teaser">
+    <div class="teaser-grid">
+      <div class="teaser-visual">
+        <img src="static/images/cuNRTO-banner.png" alt="cuNRTO on 7-DoF Franka manipulator with GPU pipeline">
+      </div>
+      <div class="teaser-content">
+        <h2>Robust Planning at GPU Speed</h2>
+        <p>
+          cuNRTO offloads the expensive inner-loop SOCP solves of nonlinear robust trajectory optimization
+          onto the GPU, enabling real-time-capable robust planning for high-dimensional robotic systems
+          under bounded uncertainty.
+        </p>
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-value">139.6&times;</div>
+            <div class="stat-desc">Max Speedup</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">25.9&times;</div>
+            <div class="stat-desc">Wall-Clock<br>(Franka 7-DoF)</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">100%</div>
+            <div class="stat-desc">Constraint<br>Satisfaction</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── Video ─────────────────────────────────── -->
+  <section class="section">
+    <div class="section-label">Video</div>
+    <div class="video-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/AqxSrkhoRZE"
+        title="cuNRTO Video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── Abstract ──────────────────────────────── -->
+  <section class="section">
+    <div class="section-label">Abstract</div>
+    <p class="abstract-body">
+      Robust trajectory optimization enables autonomous systems to operate safely under uncertainty
+      by computing control policies that satisfy the constraints for all bounded disturbances.
+      However, these problems often lead to large Second Order Conic Programming (SOCP) constraints,
+      which are computationally expensive. In this work, we propose the CUDA Nonlinear Robust
+      Trajectory Optimization (<strong>cuNRTO</strong>) framework by introducing two dynamic optimization
+      architectures that have direct application to robust decision-making and are implemented on CUDA.
+      The first architecture, <strong>NRTO-DR</strong>, leverages the Douglas-Rachford (DR) splitting method
+      to solve the SOCP inner subproblems of NRTO, thereby significantly reducing the computational
+      burden through parallel SOCP projections and sparse direct solves. The second architecture,
+      <strong>NRTO-FullADMM</strong>, is a novel variant that further exploits the problem structure to
+      improve scalability using the Alternating Direction Method of Multipliers (ADMM). Finally, we
+      provide GPU implementation of the proposed methodologies using custom CUDA kernels for SOC
+      projection steps and cuBLAS GEMM chains for feedback gain updates. We validate the performance
+      of cuNRTO through simulated experiments on unicycle, quadcopter, and Franka manipulator models,
+      demonstrating speedup up to <strong>139.6&times;</strong>.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── Method ────────────────────────────────── -->
+  <section class="section-wide">
+    <div class="section-label">Method</div>
+    <div class="method-intro">
+      <p>
+        cuNRTO addresses the computational bottleneck of Nonlinear Robust Trajectory Optimization
+        by offloading the expensive inner-loop SOCP solves onto the GPU. The outer successive
+        convexification loop runs on the CPU, while the inner-loop solver executes entirely on the GPU.
+        We propose two architectures: <strong>NRTO-DR</strong> applies Douglas-Rachford splitting to
+        decompose SOCP subproblems into parallel SOC projections and sparse affine-set projections.
+        <strong>NRTO-FullADMM</strong> reformulates the entire inner loop using ADMM, moving all
+        update blocks onto the GPU and achieving <strong>86.5%</strong> GPU utilization
+        (vs. 34.9% for NRTO-DR).
+      </p>
+    </div>
+
+    <div class="figure-block">
+      <img src="static/images/cuNRTO-pipeline.png" alt="cuNRTO computational pipeline">
+      <p class="fig-caption">
+        The cuNRTO pipeline. The outer successive linearization loop runs on the Host (CPU),
+        while the inner ADMM loop runs entirely on the Device (GPU) with parallel SOC projections.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider-wide">
+
+  <!-- ── Results ───────────────────────────────── -->
+  <section class="section-wide">
+    <div class="section-label">Results</div>
+
+    <!-- Franka -->
+    <div class="results-subtitle">Franka Manipulator (7-DoF)</div>
+    <div class="result-hero">
+      <img src="static/images/franka_fulladmm.png" alt="Franka manipulator trajectory and Isaac Sim">
+      <p class="fig-caption">
+        End-effector trajectory with obstacle avoidance validated in Isaac Sim.
+        NRTO-FullADMM achieves 25.9&times; wall-clock speedup with 100% constraint satisfaction.
+      </p>
+    </div>
+
+    <!-- Unicycle & Quadcopter -->
+    <div class="results-subtitle" style="margin-top: 2.5rem;">Unicycle &amp; Quadcopter</div>
+    <div class="results-grid-2">
+      <div>
+        <img src="static/images/unicycle_dr.png" alt="Unicycle NRTO-DR">
+        <p class="fig-caption">Unicycle &mdash; NRTO-DR</p>
+      </div>
+      <div>
+        <img src="static/images/unicycle_full_admm.png" alt="Unicycle NRTO-FullADMM">
+        <p class="fig-caption">Unicycle &mdash; NRTO-FullADMM</p>
+      </div>
+      <div>
+        <img src="static/images/quadcopter_dr.png" alt="Quadcopter NRTO-DR">
+        <p class="fig-caption">Quadcopter &mdash; NRTO-DR</p>
+      </div>
+      <div>
+        <img src="static/images/quadcopter_fulladmm.png" alt="Quadcopter NRTO-FullADMM">
+        <p class="fig-caption">Quadcopter &mdash; NRTO-FullADMM</p>
+      </div>
+    </div>
+
+    <!-- Robotarium -->
+    <div class="results-subtitle" style="margin-top: 2.5rem;">Real-World Robotarium Experiment</div>
+    <p class="slider-intro">
+      Hardware validation on the Georgia Tech Robotarium. Drag the slider to compare:
+      the NRTO disturbance-feedback policy successfully navigates around obstacles,
+      while the nominal controller collides.
+    </p>
+
+    <div class="compare-container" id="compare">
+      <img src="static/images/robotarium_nominal.png" alt="Nominal control only">
+      <div class="compare-overlay" id="compareOverlay">
+        <img src="static/images/robotarium_feedback.png" alt="With NRTO disturbance feedback">
+      </div>
+      <div class="compare-handle" id="compareHandle"></div>
+    </div>
+    <div class="compare-labels">
+      <span class="compare-label success"><i class="fas fa-check" style="margin-right:4px;"></i> With NRTO Feedback</span>
+      <span class="compare-label fail"><i class="fas fa-times" style="margin-right:4px;"></i> Nominal Only</span>
+    </div>
+  </section>
+
+  <hr class="divider-wide">
+
+  <!-- ── BibTeX ────────────────────────────────── -->
+  <section class="section">
+    <div class="section-label">Citation</div>
+    <div class="bib-block">
+      <button class="copy-btn" onclick="copyBib(this)">
+        <i class="fas fa-copy"></i> Copy
+      </button>
+      <pre class="bib-pre" id="bib">@inproceedings{wang2026cunrto,
+  title     = {cuNRTO: GPU-Accelerated Nonlinear Robust
+               Trajectory Optimization},
+  author    = {Wang, Jiawei and Abdul, Arshiya Taj
+               and Theodorou, Evangelos A.},
+  booktitle = {Robotics: Science and Systems (RSS)},
+  year      = {2026}
+}</pre>
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────── -->
+  <footer class="site-footer">
+    <hr class="divider" style="margin-bottom: 2rem;">
+    <p>Arshiya Taj Abdul and Evangelos A. Theodorou are supported by the ARO Award #W911NF2010151.</p>
+    <p>Website design inspired by <a href="https://nerfies.github.io" target="_blank">Nerfies</a>.</p>
+  </footer>
+
+  <script>
+  // BibTeX copy
+  function copyBib(btn) {
+    var text = document.getElementById('bib').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Image comparison slider with auto-animation
+  (function() {
+    var container = document.getElementById('compare');
+    var overlay = document.getElementById('compareOverlay');
+    var handle = document.getElementById('compareHandle');
+    var dragging = false;
+    var animating = false;
+    var animId = null;
+    var currentPct = 50;
+
+    function setPct(pct) {
+      currentPct = pct;
+      overlay.style.width = pct + '%';
+      handle.style.left = pct + '%';
+    }
+
+    function setPosition(x) {
+      var rect = container.getBoundingClientRect();
+      var pos = Math.max(0, Math.min(x - rect.left, rect.width));
+      setPct((pos / rect.width) * 100);
+    }
+
+    // Smooth auto-sweep using sine easing
+    var autoTimer = null;
+    var startTime = null;
+    var cycleDuration = 6000; // 6 seconds per full sweep cycle
+    var paused = false;
+
+    function autoAnimate(timestamp) {
+      if (dragging || paused) {
+        animId = requestAnimationFrame(autoAnimate);
+        startTime = null;
+        return;
+      }
+      if (!startTime) startTime = timestamp;
+      var elapsed = timestamp - startTime;
+      // Smooth sweep 0% → 100% → 0% using cosine easing
+      var t = (elapsed % cycleDuration) / cycleDuration;
+      var pct = 50 - 50 * Math.cos(t * 2 * Math.PI);
+      setPct(pct);
+      animId = requestAnimationFrame(autoAnimate);
+    }
+
+    // Start auto-animation when slider scrolls into view
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !animating) {
+          animating = true;
+          animId = requestAnimationFrame(autoAnimate);
+        } else if (!entry.isIntersecting && animating) {
+          animating = false;
+          if (animId) cancelAnimationFrame(animId);
+          startTime = null;
+        }
+      });
+    }, { threshold: 0.3 });
+    observer.observe(container);
+
+    // User interaction: pause auto, let user drag
+    function startDrag(clientX) {
+      dragging = true;
+      paused = true;
+      setPosition(clientX);
+    }
+
+    function moveDrag(clientX) {
+      if (!dragging) return;
+      setPosition(clientX);
+    }
+
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      // Resume auto-animation after 3s of no interaction
+      clearTimeout(autoTimer);
+      autoTimer = setTimeout(function() {
+        startTime = null;
+        paused = false;
+      }, 3000);
+    }
+
+    container.addEventListener('mousedown', function(e) {
+      startDrag(e.clientX);
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', function(e) { moveDrag(e.clientX); });
+    window.addEventListener('mouseup', endDrag);
+
+    container.addEventListener('touchstart', function(e) {
+      startDrag(e.touches[0].clientX);
+    }, { passive: true });
+    window.addEventListener('touchmove', function(e) {
+      if (dragging) moveDrag(e.touches[0].clientX);
+    });
+    window.addEventListener('touchend', endDrag);
+  })();
+  </script>
+
+</body>
+</html>

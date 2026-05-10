@@ -1,0 +1,6 @@
+Raw/
+.DS_Store
+.claude/
+.playwright-mcp/
+*.png
+!static/images/*.png
