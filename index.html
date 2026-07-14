@@ -36,7 +36,7 @@
       <a class="link-btn" href="https://arxiv.org/pdf/2603.02642" target="_blank"><i class="fas fa-file-pdf"></i> Paper</a>
       <a class="link-btn" href="https://arxiv.org/abs/2603.02642" target="_blank"><i class="ai ai-arxiv"></i> arXiv</a>
       <a class="link-btn" href="https://youtu.be/AqxSrkhoRZE" target="_blank"><i class="fab fa-youtube"></i> Video</a>
-      <a class="link-btn" href="https://huggingface.co/spaces/jwjoel/cuNRTO"><i class="fab fa-github"></i> Live Playground</a>
+      <a class="link-btn" href="#live-demo"><i class="fas fa-rocket"></i> Live Demo</a>
     </div>
   </header>
 
@@ -199,6 +199,30 @@
   <hr class="divider-wide">
 
   <!-- ── BibTeX ────────────────────────────────── -->
+  <section class="section-wide" id="live-demo">
+    <div class="section-label">Live Demo</div>
+    <div class="method-intro">
+      <p>
+        Solve the robust trajectory-optimization benchmark yourself — live on an NVIDIA A100.
+        Edit the scenario (goal, obstacles, uncertainty), race <strong>NRTO-FullADMM</strong> against the
+        NRTO-DR and MOSEK baselines, and verify the result with a 100-sample Monte-Carlo rollout and a
+        formal certificate. The GPU is shared: up to 3 experiments run concurrently, each visitor may hold
+        one queued job, and anyone can attach to an experiment that is already running.
+      </p>
+    </div>
+    <div class="demo-wrap">
+      <iframe
+        src="https://cunrto.deemos.dev"
+        title="cuNRTO Live Demo — GPU Mission Control"
+        loading="lazy"
+        allow="fullscreen"
+        allowfullscreen></iframe>
+    </div>
+    <p class="demo-note">Cramped? <a href="https://cunrto.deemos.dev" target="_blank" rel="noopener">Open the demo full-page&nbsp;&#8599;</a></p>
+  </section>
+
+  <hr class="divider">
+
   <section class="section">
     <div class="section-label">Citation</div>
     <div class="bib-block">

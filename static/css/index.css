@@ -544,3 +544,28 @@ body {
     align-items: center;
   }
 }
+
+/* ── Live demo embed ─────────────────────────── */
+.demo-wrap {
+  margin-top: 1.4rem;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, .10);
+  background: #0b0d10;
+}
+.demo-wrap iframe {
+  display: block;
+  width: 100%;
+  height: 900px;
+  border: 0;
+}
+.demo-note {
+  margin-top: .6rem;
+  font-size: .85rem;
+  color: #7a7a7a;
+  text-align: right;
+}
+@media (max-width: 900px) {
+  .demo-wrap iframe { height: 640px; }
+}
