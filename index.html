@@ -16,7 +16,13 @@
 <body>
 
   <!-- ── Hero ──────────────────────────────────── -->
-  <header class="hero">
+  <section class="playground-full" id="playground" aria-label="cuNRTO live playground">
+    <iframe src="https://cunrto.deemos.dev" title="cuNRTO Live Playground — GPU Mission Control"
+            allow="fullscreen" allowfullscreen></iframe>
+    <a class="scroll-hint" href="#paper-top">Scroll down for the paper<span class="chev">&#9662;</span></a>
+  </section>
+
+  <header class="hero" id="paper-top">
     <h1 class="paper-title">cuNRTO: GPU-Accelerated Nonlinear<br>Robust Trajectory Optimization</h1>
     <div><span class="venue-badge">Robotics: Science and Systems 2026</span></div>
 
@@ -36,7 +42,7 @@
       <a class="link-btn" href="https://arxiv.org/pdf/2603.02642" target="_blank"><i class="fas fa-file-pdf"></i> Paper</a>
       <a class="link-btn" href="https://arxiv.org/abs/2603.02642" target="_blank"><i class="ai ai-arxiv"></i> arXiv</a>
       <a class="link-btn" href="https://youtu.be/AqxSrkhoRZE" target="_blank"><i class="fab fa-youtube"></i> Video</a>
-      <a class="link-btn link-btn-primary" href="#live-demo"><i class="fas fa-rocket"></i> Live Demo</a>
+      <a class="link-btn link-btn-primary" href="#playground"><i class="fas fa-rocket"></i> Live Demo</a>
     </div>
   </header>
 
@@ -76,38 +82,6 @@
   <hr class="divider">
 
   <!-- ── Live Demo ─────────────────────────────── -->
-  <section class="section-wide" id="live-demo">
-    <div class="section-label">Live Demo</div>
-    <div class="method-intro demo-intro">
-      <p>
-        Solve the robust trajectory-optimization benchmark yourself &mdash; live on an NVIDIA A100.
-        Edit the scenario, race <strong>NRTO-FullADMM</strong> against the NRTO-DR and MOSEK baselines,
-        and verify the result with a 100-sample Monte-Carlo rollout and a formal certificate.
-      </p>
-    </div>
-
-    <div class="demo-ribbon">
-      <span class="live-pill"><span class="live-dot"></span>LIVE</span>
-      <span class="ribbon-text">Running on an NVIDIA A100 &mdash; shared queue</span>
-      <span class="ribbon-chips">
-        <span class="chip">3 concurrent</span>
-        <span class="chip">1 queued job per visitor</span>
-        <span class="chip">attach to running experiments</span>
-      </span>
-    </div>
-
-    <div class="demo-wrap">
-      <iframe
-        src="https://cunrto.deemos.dev"
-        title="cuNRTO Live Demo — GPU Mission Control"
-        loading="lazy"
-        allow="fullscreen"
-        allowfullscreen></iframe>
-    </div>
-    <p class="demo-note">Cramped? <a href="https://cunrto.deemos.dev" target="_blank" rel="noopener">Open the demo full-page&nbsp;&#8599;</a></p>
-  </section>
-
-  <hr class="divider">
 
   <!-- ── Video ─────────────────────────────────── -->
   <section class="section">
