@@ -42,6 +42,29 @@ body {
   margin: 0 0 1rem;
 }
 
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+.badge-row .venue-badge,
+.badge-row .award-badge {
+  margin-bottom: 0;
+}
+.award-badge {
+  display: inline-block;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: calc(0.3rem - 1.5px) 1rem;
+  border-radius: 100px;
+}
 .venue-badge {
   display: inline-block;
   background: var(--accent);
